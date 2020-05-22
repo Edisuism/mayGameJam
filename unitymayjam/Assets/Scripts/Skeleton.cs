@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ColorType { red, green, blue, yellow, magenta, cyan, white }
+public enum ColorType { red, green, blue, yellow, magenta, cyan, white, black }
 
 public class Skeleton : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class Skeleton : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         ColorGet(colorType);
+        LayerGet();
         
     }
 
@@ -48,31 +49,110 @@ public class Skeleton : MonoBehaviour
         */
     }
 
+    void LayerGet() {
+        // Set the enemy layer
+        switch (colorType) {
+            case ColorType.red:
+                gameObject.layer = LayerMask.NameToLayer("Red");
+                break;
+            case ColorType.green:
+                gameObject.layer = LayerMask.NameToLayer("Green");
+                break;
+            case ColorType.blue:
+                gameObject.layer = LayerMask.NameToLayer("Blue");
+                break;
+            default:
+                gameObject.layer = LayerMask.NameToLayer("Default");
+                break;
+        }
+    }
+
+    private void SetSpriteColour(Color colour) {
+        spriteRenderer.color = colour;
+    }
+
     private void ColorGet(ColorType color)
     {
         switch (color)
         {
             case ColorType.red:
-                spriteRenderer.color = Color.red;
+                SetSpriteColour(Color.red);
                 break;
             case ColorType.green:
-                spriteRenderer.color = Color.green;
+                SetSpriteColour(Color.green);
                 break;
             case ColorType.blue:
-                spriteRenderer.color = Color.blue;
+                SetSpriteColour(Color.blue);
                 break;
             case ColorType.yellow:
-                spriteRenderer.color = Color.yellow;
+                SetSpriteColour(Color.yellow);
                 break;
             case ColorType.magenta:
-                spriteRenderer.color = Color.magenta;
+                SetSpriteColour(Color.magenta);
                 break;
             case ColorType.cyan:
-                spriteRenderer.color = Color.cyan;
+                SetSpriteColour(Color.cyan);
                 break;
             case ColorType.white:
-                spriteRenderer.color = Color.white;
+                SetSpriteColour(Color.white);
+                break;
+            case ColorType.black:
+                SetSpriteColour(Color.black);
                 break;
         }
     }
+
+    public void ColorTint(ColorType color) {
+        switch (color) {
+            case ColorType.red:
+                switch (colorType) {
+                    case ColorType.red:
+                        SetSpriteColour(Color.black);
+                        break;
+                    case ColorType.yellow:
+                        SetSpriteColour(Color.green);
+                        break;
+                    case ColorType.magenta:
+                        SetSpriteColour(Color.blue);
+                        break;
+                    default:
+                        ColorGet(colorType);
+                        break;
+                }
+                break;
+            case ColorType.green:
+                switch (colorType) {
+                    case ColorType.green:
+                        SetSpriteColour(Color.black);
+                        break;
+                    case ColorType.yellow:
+                        SetSpriteColour(Color.red);
+                        break;
+                    case ColorType.cyan:
+                        SetSpriteColour(Color.blue);
+                        break;
+                    default:
+                        ColorGet(colorType);
+                        break;
+                }
+                break;
+            case ColorType.blue:
+                switch (colorType) {
+                    case ColorType.blue:
+                        SetSpriteColour(Color.black);
+                        break;
+                    case ColorType.cyan:
+                        SetSpriteColour(Color.green);
+                        break;
+                    case ColorType.magenta:
+                        SetSpriteColour(Color.red);
+                        break;
+                    default:
+                        ColorGet(colorType);
+                        break;
+                }
+                break;
+        }
+    }
+
 }

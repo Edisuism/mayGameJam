@@ -9,38 +9,52 @@ public class GameManager : MonoBehaviour
     //Set in inspector
     public GameObject completeLevelUI;
     public GameObject deathUI;
+    public GameObject[] enemies;
 
     private GameObject player;
 
+    // public CameraManager cameraManager;
+
+    static GameManager _instance;
+
+    private void Awake() {
+        if (_instance == null) {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else {
+            Destroy(gameObject);
+        }
+    }
+
+    public static GameManager Instance {
+        get => _instance;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+    }
+
+    public void ColorTint (ColorType colorType) {
+        foreach (GameObject enemy in enemies) {
+            enemy.GetComponentInChildren<Skeleton>().ColorTint(colorType);
+        }
     }
 
     public void GameOver()
     {
-        RemoveGhosts();
         StartCoroutine("ShowDeathUI");
         //TODO: Make character look forward, perform death animation
     }
 
     public void Win()
     {
-        RemoveGhosts();
         completeLevelUI.SetActive(true);
         StartCoroutine("LoadMenu");
     }
 
-    private void RemoveGhosts()
-    {
-        GameObject[] ghostArray = GameObject.FindGameObjectsWithTag("Ghost");
-        foreach(GameObject ghost in ghostArray)
-        {
-            Destroy(ghost);
-        }
-    }
 
     IEnumerator LoadMenu()
     {

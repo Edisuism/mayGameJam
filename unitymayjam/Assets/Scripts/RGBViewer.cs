@@ -18,7 +18,7 @@ public class RGBViewer : MonoBehaviour
 
     int CurrentLayer;
 
-    public string layerName;
+    public ColorType layerColour;
 
     public Canvas Canvas_;
 
@@ -35,36 +35,35 @@ public class RGBViewer : MonoBehaviour
         LAYER_PLAYER = LayerMask.NameToLayer("Player");
     }
 
-    public void SetLayer () {
-        switch(layerName) {
-            case "Red":
+    public void SetLayer (ColorType colorType) {
+        layerColour = colorType;
+        switch(layerColour) {
+            case ColorType.red:
                 CurrentLayer = LAYER_RED;
                 break;
-            case "Green":
+            case ColorType.green:
                 CurrentLayer = LAYER_GREEN;
                 break;
-            case "Blue":
+            case ColorType.blue:
                 CurrentLayer = LAYER_BLUE;
                 break;
             default:
                 CurrentLayer = 0;
-                layerName = "";
                 break;
         }
-        Canvas_.transform.Find("RedTint").gameObject.SetActive(false);
-        Canvas_.transform.Find("GreenTint").gameObject.SetActive(false);
-        Canvas_.transform.Find("BlueTint").gameObject.SetActive(false);
-        if (layerName != "")
-            Canvas_.transform.Find(layerName + "Tint").gameObject.SetActive(true);
+        Canvas_.transform.Find("redTint").gameObject.SetActive(false);
+        Canvas_.transform.Find("greenTint").gameObject.SetActive(false);
+        Canvas_.transform.Find("blueTint").gameObject.SetActive(false);
+
+        Canvas_.transform.Find(layerColour.ToString() + "Tint").gameObject.SetActive(true);
 
         Physics2D.IgnoreLayerCollision(LAYER_PLAYER, LAYER_RED, CurrentLayer == LAYER_RED);
         Physics2D.IgnoreLayerCollision(LAYER_PLAYER, LAYER_GREEN, CurrentLayer == LAYER_GREEN);
         Physics2D.IgnoreLayerCollision(LAYER_PLAYER, LAYER_BLUE, CurrentLayer == LAYER_BLUE);
 
-        // Turn on all colour layers
-        // Turn off the colour that you're holding
-        Camera.main.cullingMask = ~(1 << CurrentLayer);
-        print(CurrentLayer);
+        // This turns off sprites of the colour that you're holding, but we're not using it
+        // Camera.main.cullingMask = ~(1 << CurrentLayer);
+        GameManager.Instance.ColorTint(layerColour);
     }
 }
 
@@ -80,7 +79,7 @@ public class RGBViewerEditor : Editor
         // myTarget.layerName = EditorGUILayout.TextField("Layer Name", myTarget.layerName);
         if(GUILayout.Button("Set Layer"))
         {
-            myTarget.SetLayer();
+            myTarget.SetLayer(myTarget.layerColour);
         }
     }
 }
