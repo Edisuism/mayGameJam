@@ -55,6 +55,7 @@ public class RGBViewer : MonoBehaviour
         Canvas_.transform.Find("greenTint").gameObject.SetActive(false);
         Canvas_.transform.Find("blueTint").gameObject.SetActive(false);
 
+        if (CurrentLayer!=0)
         Canvas_.transform.Find(layerColour.ToString() + "Tint").gameObject.SetActive(true);
 
         Physics2D.IgnoreLayerCollision(LAYER_PLAYER, LAYER_RED, CurrentLayer == LAYER_RED);

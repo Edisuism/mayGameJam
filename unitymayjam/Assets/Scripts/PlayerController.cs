@@ -21,12 +21,14 @@ public class PlayerController : MonoBehaviour
     private GameObject orbDropObjectInstantiation;
     private SpriteRenderer orb;
     private SpriteRenderer orbDropObjectColor;
+    private RGBViewer rGBViewer;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         orb = transform.Find("orb").gameObject.GetComponent<SpriteRenderer>();
         orbDropObjectColor = orbDropObject.GetComponent<SpriteRenderer>();
+        rGBViewer = GetComponent<RGBViewer>();
         //gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -97,6 +99,20 @@ public class PlayerController : MonoBehaviour
     {
         orb.color = orbColor;
         orbDropObjectColor.color = orbColor;
+        ColorType colorType = ColorType.white;
+        if (orbColor == Color.red)
+        {
+            colorType = ColorType.red;
+        }
+        if (orbColor == Color.blue)
+        {
+            colorType = ColorType.blue;
+        }
+        if (orbColor == Color.green)
+        {
+            colorType = ColorType.green;
+        }
+        rGBViewer.SetLayer(colorType);
     }
 
     public void OrbDrop(OrbColor orbColor)
@@ -107,6 +123,7 @@ public class PlayerController : MonoBehaviour
             orbDropObjectInstantiation.GetComponent<Orbs>().orbColor = orbColor;
             orb.color = Color.white;
             orbDropObjectColor.color = Color.white;
+            rGBViewer.SetLayer(ColorType.white);
         }
 
     }
