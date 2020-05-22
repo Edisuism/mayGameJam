@@ -6,7 +6,6 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class PlayerController : MonoBehaviour
 {
-    private Light2D light;
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
     public Animator animator;
@@ -18,11 +17,16 @@ public class PlayerController : MonoBehaviour
     //public GameManager gameManager;
     private float lastdirx, lastdiry;
     private SpriteRenderer spriteRenderer;
+    public GameObject orbDropObject;
+    private GameObject orbDropObjectInstantiation;
+    private SpriteRenderer orb;
+    private SpriteRenderer orbDropObjectColor;
 
     private void Start()
     {
-        light = GetComponentInChildren<Light2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        orb = transform.Find("orb").gameObject.GetComponent<SpriteRenderer>();
+        orbDropObjectColor = orbDropObject.GetComponent<SpriteRenderer>();
         //gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -34,6 +38,22 @@ public class PlayerController : MonoBehaviour
             movement.y = Input.GetAxis("Vertical");
 
             AnimationHandle(movement);
+
+            if (Input.GetMouseButton(1))
+            {
+                if (orb.color == Color.red)
+                {
+                    OrbDrop(OrbColor.red);
+                }
+                if (orb.color == Color.blue)
+                {
+                    OrbDrop(OrbColor.blue);
+                }
+                if (orb.color == Color.green)
+                {
+                    OrbDrop(OrbColor.green);
+                }
+            }
         }
         else if (!isAlive)
         {
@@ -71,6 +91,24 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+    }
+
+    public void OrbPickup(Color orbColor)
+    {
+        orb.color = orbColor;
+        orbDropObjectColor.color = orbColor;
+    }
+
+    public void OrbDrop(OrbColor orbColor)
+    {
+        if (orbDropObjectColor.color != Color.white)
+        {
+            orbDropObjectInstantiation = Instantiate(orbDropObject, transform.position, Quaternion.identity);
+            orbDropObjectInstantiation.GetComponent<Orbs>().orbColor = orbColor;
+            orb.color = Color.white;
+            orbDropObjectColor.color = Color.white;
+        }
+
     }
 
 }
